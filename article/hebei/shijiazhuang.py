@@ -66,15 +66,12 @@ def getDetail(detailURL):
 
 def saveArticle(resultEntityList):
 
-    resultEntityListRemove = []
-
     cursor = conn.cursor()
     for item in resultEntityList:
         cursor.execute('select count(*) from article where title = %s and site_name = %s and site_module = %s', (item['title'], item['site_name'], item['site_module']))
         if cursor.fetchone()[0] == 0:
             cursor.execute('insert into article (title, summary, publish_time, html, url, site_name, site_module, batch_id) values (%s,%s,%s,%s,%s,%s,%s,%s)', (item['title'], item['summary'], item['publish_time'], item['html'], item['url'], item['site_name'], item['site_module'], item['batch_id']))
-        else:
-            resultEntityListRemove.append(item)
+            print('>>> ', item['title'], '已入库')
     conn.commit()
     cursor.close()
     return
